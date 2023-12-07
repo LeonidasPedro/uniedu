@@ -124,7 +124,7 @@
                 <v-row >
                  <v-col cols="3">
                   <v-text-field
-                    v-model="info.idTipoMobilidade"
+                    v-model="info.idtipoUsuario"
                     outlined
                     label="ID"
                     background-color="secondary"
@@ -136,7 +136,7 @@
                  <v-col cols="9">
                   <v-text-field
                     outlined
-                    v-model="info.descTipoMobilidade"
+                    v-model="info.desctipoUsuario"
                     label="Novo tipo de atividade"
                     background-color="secondary"
                     class="custom-placeholer-color text-green"
@@ -188,23 +188,23 @@
 import { title } from 'process';
 
 export default {
-  name: "tipoMobilidade",
+  name: "tipoUsuario",
   layout: 'admin',
   data() {
     return {
       search: '',
       editMode: false,
       info:{
-        idTipoMobilidade: null,
-        descTipoMobilidade: null
+        idtipoUsuario: null,
+        desctipoUsuario: null
       },
       dialog: false,
       valid: false,
       description: '',
       
       headers: [
-        { text: "ID", value: "idTipoMobilidade", align: 'center' },
-        { text: "Tipo da Mobilidade", value: "descTipoMobilidade", align: 'center' },
+        { text: "ID", value: "idtipoUsuario", align: 'center' },
+        { text: "Tipo da Mobilidade", value: "desctipoUsuario", align: 'center' },
         {text: "", value: "actions"}
       ],
       data: [],
@@ -230,7 +230,8 @@ export default {
   methods:{
     async getItems(){
       try {
-        let res = await this.$api.get(`/tipo-usuario`);
+        let res = await this.$api.get(`/tipoUsuario`);
+        console.log(res)
         this.data = res.data
         if (res.type == 'error') {
           return this.$toast.error('Ocorreu um erro ao carregar os dados!')
@@ -242,8 +243,8 @@ export default {
     newItem(){
      try {
        this.editMode = false;
-       this.info.idTipoMobilidade = null
-       this.info.descTipoMobilidade = null
+       this.info.idtipoUsuario = null
+       this.info.desctipoUsuario = null
        this.dialog = true
      } catch (error) {
       return this.$toast.error("Ocorreu um erro!")
@@ -262,8 +263,8 @@ export default {
     async edit(item){
      try {
        this.editMode = true;
-       this.info.idTipoMobilidade = item.idTipoMobilidade;
-       this.info.descTipoMobilidade = item.descTipoMobilidade;
+       this.info.idtipoUsuario = item.idtipoUsuario;
+       this.info.desctipoUsuario = item.desctipoUsuario;
        this.dialog = true;
      } catch (error) {
         return this.$toast.error("Ocorreu um erro!")
@@ -273,10 +274,10 @@ export default {
       try {
         if (!this.valid) return this.$toast.warning("Preencha todos os campos obrigatórios");
         let req =  {
-          descTipoMobilidade: this.info.descTipoMobilidade
+          desctipoUsuario: this.info.desctipoUsuario
         } 
-          let id = this.info.idTipoMobilidade ? `${this.info.idTipoMobilidade}` : ''
-          let res = await this.$api.post(`/tipo-mobilidade/persist/${id}`, req)
+          let id = this.info.idtipoUsuario ? `${this.info.idtipoUsuario}` : ''
+          let res = await this.$api.post(`/tipoUsuario/persist/${id}`, req)
           this.resetForm()
           this.getResponseMessage(res)
         }
@@ -288,14 +289,14 @@ export default {
       try {
         this.$confirm({
           title:'Excluir',
-          message:`Tem certeza que deseja excluir o resistro id ${item.idTipoMobilidade}?`,
+          message:`Tem certeza que deseja excluir o resistro id ${item.idtipoUsuario}?`,
           button: {
             no: 'Não',
             yes: 'Sim'
           },
           callback: async confirm => {
             if(confirm){
-              let res = await this.$api.post('/tipo-mobilidade/destroy',{idTipoMobilidade: item.idTipoMobilidade})
+              let res = await this.$api.post('/tipo-mobilidade/destroy',{idtipoUsuario: item.idtipoUsuario})
               this.getResponseMessage(res)
               this.getItems()    
             }

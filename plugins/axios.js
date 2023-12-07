@@ -2,7 +2,8 @@ export default function ({ $axios }, inject) {
   const api = $axios.create();
 
   api.onRequest(() => {
-    const token = localStorage.getItem('crstore-api-token') || '';
+    const token = localStorage.getItem('api-token') || '';
+    console.log('on request');
     api.setHeader('Authorization', `Bearer ${token}`);
   });
 
