@@ -175,7 +175,7 @@
 
 <script>
 export default {
-  name: 'DefaultLayout',
+  name: 'AdminLayout',
   data () {
     return {
       badge:true,
