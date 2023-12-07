@@ -1,6 +1,5 @@
 <template>
   <v-app dark>
-    <vue-confirm-dialog></vue-confirm-dialog>
     <v-navigation-drawer
       v-model="drawer"
       color="#e6e6eb"
@@ -165,6 +164,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer
+      class="mt-5"
       :absolute="!fixed"
       apps
     >
@@ -188,12 +188,11 @@ export default {
         {title: 'Atividade Sábado', data: 'Aviso de testes'}
       ],
       actionsItems: [
-        {title: 'Meus dados',link: "google.com"},
-        {title: 'Sair', link: "google.com"}
+        {title: 'Sair', to: '/admin'}
       ],
       pages: [
-        { icon: 'mdi-account', title: 'Alunos', to: '/admin/pais' },
-        { icon: 'mdi-earth', title: 'Demandas', to: '/admin/idioma' },
+        { icon: 'mdi-school', title: 'Minha Bolsa', to: '/' },
+        { icon: 'mdi-earth', title: 'Demandas', to: '/' },
       ],
       miniVariant: false,
       right: true,

@@ -124,12 +124,12 @@
                 <v-row >
                  <v-col cols="3">
                   <v-text-field
-                    v-model="info.idtipoUsuario"
+                    v-model="info.id"
                     outlined
                     label="ID"
                     background-color="secondary"
                     class="custom-placeholer-color text-green"
-                    placeholder="ID Tipo de atividade"
+                    placeholder="ID Tipo de usuario"
                     disabled
                   ></v-text-field>
                  </v-col>
@@ -137,10 +137,10 @@
                   <v-text-field
                     outlined
                     v-model="info.desctipoUsuario"
-                    label="Novo tipo de atividade"
+                    label="Novo tipo de usuario"
                     background-color="secondary"
                     class="custom-placeholer-color text-green"
-                    placeholder="Tipo de atividade"
+                    placeholder="Tipo de usuario"
                     :rules="rule"
                   ></v-text-field>
                 </v-col> 
@@ -195,7 +195,7 @@ export default {
       search: '',
       editMode: false,
       info:{
-        idtipoUsuario: null,
+        id: null,
         desctipoUsuario: null
       },
       dialog: false,
@@ -203,8 +203,8 @@ export default {
       description: '',
       
       headers: [
-        { text: "ID", value: "idtipoUsuario", align: 'center' },
-        { text: "Tipo da Mobilidade", value: "desctipoUsuario", align: 'center' },
+        { text: "ID", value: "id", align: 'center' },
+        { text: "Tipo do usuario", value: "tipoUsuario", align: 'center' },
         {text: "", value: "actions"}
       ],
       data: [],
@@ -223,96 +223,93 @@ export default {
     }
   },
 
- async created(){
+async created(){
     await this.getItems();
   },
   
   methods:{
+
     async getItems(){
-      try {
-        let res = await this.$api.get(`/tipoUsuario`);
-        console.log(res)
-        this.data = res.data
-        if (res.type == 'error') {
-          return this.$toast.error('Ocorreu um erro ao carregar os dados!')
-        }
+      try{
+        let res = await fetch('http://localhost:3333/tipoUsuario')
+        let response = await res.json()
+        this.data = response.data
+        this.dialog = false
+
       } catch (error) {
-          return this.$toast.error("Ocorreu um erro!")
+        return Window.alert("Ocorreu um erro!")
       }
     },
     newItem(){
      try {
        this.editMode = false;
-       this.info.idtipoUsuario = null
+       this.info.id = null
        this.info.desctipoUsuario = null
        this.dialog = true
      } catch (error) {
-      return this.$toast.error("Ocorreu um erro!")
+      return Window.alert("Ocorreu um erro!")
      }
     },
     async resetForm(){
       try {
-        this.dialog = false;
-        this.$refs.form.reset();
-        this.description = '',
-        await this.getItems();
+        this.info.id = null
+        this.info.desctipoUsuario = null
+        this.dialog = false
+        this.editMode = false
+        this.valid = false
+        return this.getItems();
       } catch (error) {
-          return this.$toast.error("Ocorreu um erro!")
+          return Window.alert("Ocorreu um erro!")
       }
     },
     async edit(item){
      try {
        this.editMode = true;
-       this.info.idtipoUsuario = item.idtipoUsuario;
-       this.info.desctipoUsuario = item.desctipoUsuario;
+       this.info.id = item.id;
+       this.info.desctipoUsuario = item.tipoUsuario;
        this.dialog = true;
      } catch (error) {
-        return this.$toast.error("Ocorreu um erro!")
+        return Window.alert("Ocorreu um erro!")
      }
     },
     async persist(){
       try {
-        if (!this.valid) return this.$toast.warning("Preencha todos os campos obrigatórios");
+        if (!this.valid) return Window.alert("Preencha todos os campos obrigatórios");
         let req =  {
-          desctipoUsuario: this.info.desctipoUsuario
-        } 
-          let id = this.info.idtipoUsuario ? `${this.info.idtipoUsuario}` : ''
-          let res = await this.$api.post(`/tipoUsuario/persist/${id}`, req)
-          this.resetForm()
-          this.getResponseMessage(res)
+          tipoUsuario: this.info.desctipoUsuario
         }
-        catch (error) {
-          return this.$toast.error("Ocorreu um erro!")
+        let id = this.info.id ? `${this.info.id}` : ''
+        let res = fetch(`http://localhost:3333/tipoUsuario/persist/${id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(req)
+        })
+        this.info.id = null
+        this.info.desctipoUsuario = null
+        return this.resetForm()
+
+      } catch (error) {
+        return Window.alert("Ocorreu um erro!");
       }
     },
     async destroy(item){
       try {
-        this.$confirm({
-          title:'Excluir',
-          message:`Tem certeza que deseja excluir o resistro id ${item.idtipoUsuario}?`,
-          button: {
-            no: 'Não',
-            yes: 'Sim'
+        let req = {
+          id: item.id
+        }
+        console.log(req);
+        let res = await fetch('http://localhost:3333/tipoUsuario/destroy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
           },
-          callback: async confirm => {
-            if(confirm){
-              let res = await this.$api.post('/tipo-mobilidade/destroy',{idtipoUsuario: item.idtipoUsuario})
-              this.getResponseMessage(res)
-              this.getItems()    
-            }
-          }
+          body: JSON.stringify(req)
         })
+        return this.getItems()
       } catch (error) {
-        this.$toast.error("Ocorreu um erro!")
-      }
-    },
-    getResponseMessage (response) {
-      if (response.type == 'success'){
-        return this.$toast.success(`${response.message}`)
-      } else if (response.type == 'warning') {
-        return this.$toast.warning(`${response.message}`)
-      } else if (response.type == 'error') {
-        return this.$toast.error(`${response.message}`)
+        return Window.alert("Ocorreu um erro!");
       }
     },
   }

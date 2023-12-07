@@ -1,6 +1,5 @@
 <template>
   <v-app dark>
-    <vue-confirm-dialog></vue-confirm-dialog>
     <v-navigation-drawer
       v-model="drawer"
       color="#e6e6eb"
@@ -56,48 +55,8 @@
         open-on-hover
         offset-y
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="#004000"
-            height="100%"
-            v-bind="attrs"
-            elevation="0"
-            v-on="on"
-            outlined
-            fab
-          >
-          <v-badge
-            v-if="badge"
-            dot
-            color="red"
-            overlap
-          >
-            <v-icon
-              color="white"
-            >
-              mdi-bell
-            </v-icon>
-          </v-badge>
-          <v-icon 
-              v-if="!badge"
-              color="white"
-            >
-              mdi-bell
-            </v-icon>
-          </v-btn>
-        </template>
         <v-card>
           <v-card-text>
-        <v-list>
-          <v-list-item
-            v-for="(item3, index3) in notification"
-            :key="index3"
-            link
-            :to="item3.link"
-          >
-            <v-list-item-title>{{item3.title}}</v-list-item-title>
-          </v-list-item>
-        </v-list>
         </v-card-text>
         </v-card>
       </v-menu>
@@ -109,28 +68,19 @@
           <v-btn
             color="#004000"
             height="100%"
-            v-bind="attrs"
-            v-on="on"
             outlined
             elevation="0"
+            to="/"
           >
-          <v-avatar
-            size="40"
-          >
-            <v-img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqkQz6MBM4H75kQyj-knYjmZ3aCuD3k0AO9g&usqp=CAU"
-            >
-            </v-img>
-          </v-avatar>
           <p 
             style="color:white;" 
             class="mt-5 ml-5"
           >
-            {{name}}
+            Sair
           </p>
           </v-btn>
         </template>
-        <v-list>
+      <v-list>
           <v-list-item
             v-for="(item, index2) in actionsItems"
             :key="index2"
@@ -187,13 +137,9 @@ export default {
         {title: 'Nova entrega de atividade!!!!', data: 'Aviso de testes'},
         {title: 'Atividade Sábado', data: 'Aviso de testes'}
       ],
-      actionsItems: [
-        {title: 'Meus dados',link: "google.com"},
-        {title: 'Sair', link: "google.com"}
-      ],
       pages: [
-        { icon: 'mdi-account', title: 'Alunos', to: '/admin/pais' },
-        { icon: 'mdi-earth', title: 'Demandas', to: '/admin/idioma' },
+        { icon: 'mdi-account', title: 'Tipos de Usuarios', to: '/admin/pais' },
+        { icon: 'mdi-earth', title: 'Importar Dados', to: '/admin/idioma' },
       ],
       miniVariant: false,
       right: true,
